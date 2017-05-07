@@ -14,7 +14,7 @@ module.exports = (function () {
         if (token) {
             // verifies secret and checks exp
             jwt.verify(token, constants.JWT_SECRET, function (err, decoded) {
-                if (err) { res.status(401).json({ success: false, message: 'Failed to authenticate token' }); }
+                if (err) { return res.status(401).json({ success: false, message: 'Failed to authenticate token' }); }
 
                 else {
                     // if everything is good, save to request for use in other routes
@@ -26,7 +26,7 @@ module.exports = (function () {
 
         else {
             // if there is no token
-            res.status(401).json({
+            return res.status(401).json({
                 success: false,
                 message: 'No token provided'
             });

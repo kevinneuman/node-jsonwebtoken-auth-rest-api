@@ -9,18 +9,18 @@ module.exports = (function () {
     router.post('/user', function (req, res) {
         // find user
         User.findOne({ 'username': req.decoded.username }, '-_id -__v -password', function (err, user) {
-            if (err) { res.status(500).json({ success: false }); }
+            if (err) { return res.status(500).json({ success: false }); }
 
             // user found
             if (user) {
-                res.status(200).json({
+                return res.status(200).json({
                     success: true,
                     user
                 });
             }
 
             else {
-                res.status(404).json({
+                return res.status(404).json({
                     success: false,
                     message: 'User not found'
                 });

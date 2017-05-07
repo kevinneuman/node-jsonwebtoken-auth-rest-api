@@ -13,13 +13,13 @@ module.exports = (function () {
         if (req.body.username && req.body.password) {
             // find user
             User.findOne({ 'username': req.body.username }, function (err, user) {
-                if (err) { res.status(500).json({ success: false }); }
+                if (err) { return res.status(500).json({ success: false }); }
 
                 // user found
                 if (user) {
                     // compare passwords
                     bcrypt.compare(req.body.password, user.password, function (err, isMatch) {
-                        if (err) { res.status(500).json({ success: false }); }
+                        if (err) { return res.status(500).json({ success: false }); }
 
                         // passwords match
                         if (isMatch) {
@@ -27,14 +27,14 @@ module.exports = (function () {
                             // sign with default (HMAC SHA256)
                             var token = jwt.sign({ username: user.username }, constants.JWT_SECRET, { expiresIn: '365d' }); // expires in 1 year
 
-                            res.status(200).json({
+                            return res.status(200).json({
                                 success: true,
                                 token
                             });
                         }
 
                         else {
-                            res.status(401).json({
+                            return res.status(401).json({
                                 success: false,
                                 message: 'Wrong password'
                             });
@@ -43,7 +43,7 @@ module.exports = (function () {
                 }
 
                 else {
-                    res.status(404).json({
+                    return res.status(404).json({
                         success: false,
                         message: 'User not found'
                     });
@@ -52,7 +52,7 @@ module.exports = (function () {
         }
 
         else {
-            res.status(400).json({
+            return res.status(400).json({
                 success: false,
                 message: 'Username and password is required'
             });
